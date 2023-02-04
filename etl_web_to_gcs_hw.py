@@ -2,6 +2,7 @@ from pathlib import Path
 import pandas as pd
 from prefect import flow, task
 from prefect_gcp.cloud_storage import GcsBucket
+from prefect.filesystems import GitHub
 
 
 @task(retries=3)
@@ -59,4 +60,5 @@ def etl_web_to_gcs() -> None:
     write_gcs(path)
 
 if __name__ == "__main__":
+    github_block = GitHub.load("zoomcamp")
     etl_web_to_gcs()
