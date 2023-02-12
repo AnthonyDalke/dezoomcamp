@@ -1,0 +1,63 @@
+CREATE OR REPLACE EXTERNAL TABLE `dezoomcamp.week3_hw`
+OPTIONS (
+  format = 'CSV',
+  uris = ['gs://dezoomcamp-week3/data/wk3/fhv_tripdata_2019-*.csv']
+);
+
+CREATE OR REPLACE TABLE `dezoomcamp.week3_hw_non_partitoned` AS
+SELECT * FROM `dezoomcamp.week3_hw`;
+
+
+--Question 1
+SELECT
+  COUNT(*)
+FROM `dezoomcamp.week3_hw`;
+--43,244,696
+
+
+--Question 2
+SELECT
+  COUNT(DISTINCT(affiliated_base_number))
+FROM `dezoomcamp.week3_hw`;
+
+SELECT
+  COUNT(DISTINCT(affiliated_base_number))
+FROM `dezoomcamp.week3_hw_non_partitoned`;
+--225.82 MB for the External Table and 47.60MB for the BQ Table
+
+
+--Question 3
+SELECT
+  COUNT(*)
+FROM dezoomcamp.`week3_hw`
+WHERE
+  PUlocationID IS NULL
+  AND DOlocationID IS NULL;
+--20,332
+
+
+--Question 4
+--Partition by pickup_datetime Cluster on affiliated_base_number
+
+
+--Question 5
+CREATE OR REPLACE TABLE `dezoomcamp.week3_hw_partitioned`
+PARTITION BY DATE(pickup_datetime)
+CLUSTER BY dispatching_base_num AS (
+  SELECT * FROM `dezoomcamp.week3_hw_non_partitoned`
+);
+
+SELECT 
+  COUNT(DISTINCT(affiliated_base_number))
+FROM `dezoomcamp.week3_hw_partitioned`
+WHERE 
+  pickup_datetime BETWEEN '2019/03/01' and '2019/03/31';
+--647.87 MB for non-partitioned table and 23.06 MB for the partitioned table
+
+
+--Question 6
+--BigQuery
+
+
+--Question 7
+--False
