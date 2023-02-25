@@ -63,7 +63,5 @@ def web_to_gcs(
         print(f"GCS: {service}/{file_name}")
 
 
-# web_to_gcs('2019', 'green')
-# web_to_gcs('2020', 'green')
 web_to_gcs('2019', 'fhv')
 web_to_gcs('2020', 'fhv')
